@@ -43,14 +43,29 @@ export function LoginForm() {
 				setFormState(prev => ({ ...prev, error: true }))
 			})
 			.finally(() => {
-				setFormState(prev => ({ ...prev, error: false, loading: false }))
+				setFormState(prev => ({ ...prev, loading: false }))
 			})
 	}
 	return (
 		<form onSubmit={handleSubmit} autoComplete='on' className={cn(formState.error ? 'error' : null)}>
 			<h3>Ingrese sus credenciales</h3>
-			<input id='email' name='email' type='email' placeholder='Correo Electronico' autoComplete='email' autoFocus required />
-			<input id='password' name='password' type='password' placeholder='Contraseña' autoComplete='current-password'  required/>
+			<input
+				id='email'
+				name='email'
+				type='email'
+				placeholder='Correo Electronico'
+				autoComplete='email'
+				autoFocus
+				required
+			/>
+			<input
+				id='password'
+				name='password'
+				type='password'
+				placeholder='Contraseña'
+				autoComplete='current-password'
+				required
+			/>
 			<button type='submit' className={cn(formState.loading ? 'loading' : null)}>
 				{formState.loading ? <l-metronome size='24' speed='1.6' color='white'></l-metronome> : 'Iniciar sesion'}
 			</button>

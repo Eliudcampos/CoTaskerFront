@@ -1,5 +1,6 @@
 'use client'
 
+import { getUserData } from '@/common/utils/getUserData'
 import { APIROUTES } from '@/config/routes'
 import { Project, ProjectDTO } from '@/modules/Project/domain'
 import { UserData } from '@/modules/User/domain'
@@ -8,7 +9,7 @@ import axios from 'axios'
 import cn from 'classnames'
 import Cookies from 'js-cookie'
 import { metronome } from 'ldrs'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 interface FormState {
@@ -26,6 +27,7 @@ export default function App() {
 		description: 60
 	})
 	const [modal, setModal] = useState<boolean>(false)
+	const [projects, setProjects] = useState<Array<Project>>([])
 	let userdata: UserData | any = localStorage.getItem('userdata')
 	if (userdata) {
 		userdata = JSON.parse(userdata)
@@ -81,6 +83,27 @@ export default function App() {
 		setCountCharacters(prevCount => ({ ...prevCount, [name]: prevCount[name] - 1 }))
 	}
 
+	async function getProjects() {
+		try {
+			const { userId } = getUserData()
+			const { data: projectsDTO } = await axios(`${APIROUTES.LISTOFPROJECTS}/${userId}`)
+
+			const projects = projectsDTO.datos?.map(
+				({ nombre, descripcion }: ProjectDTO): Project => ({
+					title: nombre,
+					description: descripcion
+				})
+			)
+			setProjects(projects)
+		} catch (reason) {
+			console.log(reason)
+		}
+	}
+
+	useEffect(() => {
+		getProjects()
+	}, [])
+
 	return (
 		<main className='app'>
 			<aside className='sidebar'>
@@ -134,7 +157,15 @@ export default function App() {
 						</Dialog.Content>
 					</Dialog.Portal>
 				</Dialog.Root>
-				<div className='no-projects'>Aqui se veran tus proyectos proximamente</div>
+				{!projects ? (
+					<div className='no-projects'>Aqui se veran tus proyectos proximamente</div>
+				) : (
+					projects?.map(({ title, description }: Project) => (
+						<article className='project' key={title}>
+							{title}
+						</article>
+					))
+				)}
 			</aside>
 			<section className='content'>
 				<div className='title'>
