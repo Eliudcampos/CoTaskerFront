@@ -58,7 +58,7 @@ export default function App() {
 			})
 			toast.success('Proyecto creado exitosamente')
 			setModal(false)
-			console.log(res)
+			getProjects()
 		} catch (reason: any) {
 			setFormState(prev => ({ ...prev, error: true }))
 			console.log(reason)
@@ -89,12 +89,23 @@ export default function App() {
 			const { data: projectsDTO } = await axios(`${APIROUTES.LISTOFPROJECTS}/${userId}`)
 
 			const projects = projectsDTO.datos?.map(
-				({ nombre, descripcion }: ProjectDTO): Project => ({
+				({ nombre, descripcion, idProyecto }: ProjectDTO): Project => ({
+					projectId: idProyecto,
 					title: nombre,
 					description: descripcion
 				})
 			)
 			setProjects(projects)
+		} catch (reason) {
+			console.log(reason)
+		}
+	}
+
+	async function deleteProject(projectId: number) {
+		try {
+			await axios.delete(`${APIROUTES.DELETEPROJECT}/${projectId}`)
+			toast.success('Se elimino correctamente')
+			getProjects()
 		} catch (reason) {
 			console.log(reason)
 		}
@@ -157,12 +168,15 @@ export default function App() {
 						</Dialog.Content>
 					</Dialog.Portal>
 				</Dialog.Root>
-				{!projects ? (
+				{!projects.length ? (
 					<div className='no-projects'>Aqui se veran tus proyectos proximamente</div>
 				) : (
-					projects?.map(({ title, description }: Project) => (
+					projects?.map(({ title, description, projectId }: Project) => (
 						<article className='project' key={title}>
-							{title}
+							<p>{title}</p>
+							<button type='button' className='delete' onClick={() => deleteProject(projectId)}>
+								x
+							</button>
 						</article>
 					))
 				)}

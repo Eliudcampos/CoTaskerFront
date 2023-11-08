@@ -4,5 +4,6 @@ export const APIROUTES = {
 	REGISTER: `${API}/usuario`,
 	LOGIN: `${API}/usuario/login`,
 	CREATEPROJECT: `${API}/proyecto`,
-	LISTOFPROJECTS: `${API}/proyecto/proyectosUsuario`
+	LISTOFPROJECTS: `${API}/proyecto/proyectosUsuario`,
+	DELETEPROJECT: `${API}/proyecto`
 }

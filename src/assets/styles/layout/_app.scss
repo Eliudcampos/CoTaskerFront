@@ -23,7 +23,23 @@
 		}
 
 		.project {
-			text-decoration: underline;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			max-width: 170px;
+			p {
+				text-decoration: underline;
+			}
+
+			&:hover .delete {
+				visibility: visible;
+			}
+
+			.delete {
+				visibility: hidden;
+				color: red;
+				text-decoration: none;
+			}
 		}
 	}
 
