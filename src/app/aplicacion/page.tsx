@@ -11,7 +11,6 @@ import Cookies from 'js-cookie'
 import { metronome } from 'ldrs'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { Modal } from '@radix-ui/react-modal';
 
 interface FormState {
 	error: boolean
@@ -107,7 +106,8 @@ export default function App() {
 	
 		if (confirmDelete) {
 			try {
-				await axios.delete(`${APIROUTES.DELETEPROJECT}/${projectId}`);
+				const { userId } = getUserData()
+				await axios.delete(`${APIROUTES.DELETEPROJECT}/${projectId}&${userId}`);
 				toast.success('Se eliminó correctamente');
 				getProjects();
 			} catch (reason) {
